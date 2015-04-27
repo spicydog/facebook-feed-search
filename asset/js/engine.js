@@ -1,11 +1,7 @@
+buildThaiDictionary();
+
 var myApp = angular.module('JournalSearch', []);
 
-var person1 = {title:"John1", content:"Doe1", age:46};
-var person2 = {title:"John2", content:"Doe2", age:46};
-var person3 = {title:"John3", content:"Doe3", age:46};
-
-
-var xxx = [];
 myApp.controller('AppCtrl', function($scope) {
 
     $scope.feeds = mFeedData;
@@ -15,6 +11,17 @@ myApp.controller('AppCtrl', function($scope) {
     };
 
     var updateArray = function() {
+
+        angular.forEach(mFeedData,function(item){
+            if(item.message) {
+                item.message_t = tokenize(item.message).join('|');
+            }
+
+            if(item.description) {
+                item.description_t = tokenize(item.description).join('|');
+            }
+        });
+
         $scope.feeds = mFeedData;
     };
 
