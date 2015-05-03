@@ -1,6 +1,3 @@
-
-buildThaiDictionary();
-
 var mAccessToken = "";
 
 var mFeedData = [];
@@ -37,11 +34,11 @@ function getData() {
         var url = generateFeedRequestURL(mAccessToken,0,0,0);
         requestFeed(url);
     } else if(requestMode==1) {
-        console.log("Request NEWER feeds from: " + latestFeedTimestamp);
+        console.log("Request NEWER feeds from: " + new Date(latestFeedTimestamp*1000));
         var url = generateFeedRequestURL(mAccessToken,latestFeedTimestamp,0,0);
         requestFeed(url);
     } else if(requestMode==-1) {
-        console.log("Request OLDER feeds from: " + oldestFeedTimestamp);
+        console.log("Request OLDER feeds from: " + new Date(oldestFeedTimestamp*1000));
         var url = generateFeedRequestURL(mAccessToken,0,oldestFeedTimestamp,0);
         requestFeed(url);
     }
@@ -76,23 +73,26 @@ function processData(data) {
                 oldestFeedTimestamp = timestamp;
             }
 
-            if(checkIsNewFeed(feedData)) {
+            if(!getDocumentInfo(feedData.id)) {
                 newFeedCount++;
-                mFeedData.push(feedData);
+
+                var message = '';
                 if(feedData.message) {
-                    addDataToBarrel(feedData.message)
+                    message += feedData.message + " ";
                 }
 
                 if(feedData.description) {
-                    addDataToBarrel(feedData.description)
+                    message += feedData.description + " ";
                 }
+                var document = {"id":feedData.id,"time":timestamp,"type":feedData.type};
+                addDocumentToBarrel(message,document)
             }
 
         }
     }
 
     if(newFeedCount>0) {
-        console.log("Insert new feeds " + newFeedCount + " recodes");
+        console.log("Indexed " + newFeedCount + " feeds.");
         nextPage = data.paging.next;
         if(isRequesting) {
             getData();
@@ -100,11 +100,11 @@ function processData(data) {
     } else {
         if(requestMode==1) {
             requestMode = -1;
-            console.log("No more new feed, look for old feed");
+            console.log("No more new feed, look for old feed.");
             isRequesting = true;
         } else if(requestMode==-1) {
             requestMode = 0;
-            console.log("No more old feed, request done!");
+            console.log("No more old feed, requesting process complete.");
             isRequesting = false;
         }
         getData();

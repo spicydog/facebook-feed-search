@@ -3,35 +3,24 @@ var globalDictionary;
 var globalDocuments;
 var currentWordIndex = 0;
 
+initSearchEngine();
 
 function initSearchEngine() {
     globalDictionary = new Array();
     globalDocuments = new Array();
     currentWordIndex = 0;
     buildThaiDictionary();
-
-    //var str = 'Hello Chaingmai :) ทำไมพังวะ';
-    //console.log(tokenize(str).join('|'));
 }
 
-function addDataToBarrel(data) {
+function addDocumentToBarrel(data,document) {
 
     data = tokenize(data).join(' ');
     var result = indexData(data,globalDictionary);
-}
 
+    document.begin = result.begin;
+    document.end = result.end;
 
-function normalizeString(string) {
-    console.log("1: "+ string);
-    string = convertLowerCase(string);
-    console.log("2: "+ string);
-    string = filterSymbols(string);
-    console.log("3: "+ string);
-    return string;
-}
-
-function convertLowerCase(string) {
-    return string.toLowerCase();
+    globalDocuments.push(document);
 }
 
 function indexData(data, dictionary) {
@@ -54,12 +43,31 @@ function indexData(data, dictionary) {
         }
     }
 
-
     var fromIndex = currentWordIndex;
     var toIndex = nextIndex - 1;
     currentWordIndex = nextIndex;
 
-    return {from:fromIndex,to:toIndex};
+    return {begin:fromIndex,end:toIndex};
+}
+
+function getDocumentID(position) {
+    for(var i in globalDocuments) {
+        doc = globalDocuments[i];
+        if(doc.begin<=position && position<=doc.end) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function getDocumentInfo(documentID) {
+    for(var i in globalDocuments) {
+        doc = globalDocuments[i];
+        if(doc.id == documentID) {
+            return doc;
+        }
+    }
+    return false;
 }
 
 function getSortedIndices(array) {
@@ -79,9 +87,6 @@ function getSortedIndices(array) {
     }
     return indices;
 }
-
-
-
 
 function printDictionary(dictionary,n) {
     var result = "";

@@ -1,6 +1,3 @@
-initSearchEngine();
-
-
 var myApp = angular.module('JournalSearch', []);
 
 myApp.controller('AppCtrl', function($scope) {
