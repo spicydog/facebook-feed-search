@@ -1,4 +1,6 @@
 
+buildThaiDictionary();
+
 var mAccessToken = "";
 
 var mFeedData = [];
@@ -77,6 +79,13 @@ function processData(data) {
             if(checkIsNewFeed(feedData)) {
                 newFeedCount++;
                 mFeedData.push(feedData);
+                if(feedData.message) {
+                    addDataToBarrel(feedData.message)
+                }
+
+                if(feedData.description) {
+                    addDataToBarrel(feedData.description)
+                }
             }
 
         }
