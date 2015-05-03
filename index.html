@@ -1,5 +1,7 @@
 <html lang="en" ng-app="JournalSearch">
 <head>
+
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
@@ -22,8 +24,23 @@
 <md-toolbar layout="row">
     <div class="md-toolbar-tools" layout-align-gt-sm="center">
         <fb:login-button scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
+    </div>
+    <div class="md-toolbar-tools" layout-align-gt-sm="center">
         <button ng-click="clickRequest()">request</button>
     </div>
+
+</md-toolbar>
+
+
+<md-toolbar layout="row">
+    <div class="md-toolbar-tools" layout-align-gt-sm="center">
+        <input type="text" />
+    </div>
+
+    <div class="md-toolbar-tools" layout-align-gt-sm="center">
+        <div>Total Feed: <span>{{feeds.count}}</span></div>
+    </div>
+
 </md-toolbar>
 
 <div layout="row" flex>
