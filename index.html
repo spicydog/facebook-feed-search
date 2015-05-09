@@ -39,7 +39,7 @@
     </div>
 
     <div class="md-toolbar-tools" layout-align-gt-sm="center">
-        <div>Total Feed: <span>{{feeds.count}}</span></div>
+        <div>Total Feed: <span>{{requestCount}}</span></div>
     </div>
 
 </md-toolbar>
@@ -51,14 +51,14 @@
         <md-content layout="column" flex class="md-padding">
             <div>
                 <md-content>
-                    <md-card ng-repeat="feed in feeds | orderBy:'-timestamp'" class="ng-hide" ng-hide="isFinishLoading">
+                    <md-card ng-repeat="feed in feedResults | orderBy:'-score'" class="ng-hide" ng-hide="isFinishLoading">
                         <md-card-content>
 
                             <h2 class="md-display-4" >{{feed.updated_time}}</h2>
                             <div class="md-subhead"><a target="_blank" href="https://facebook.com/{{feed.from.id}}">{{feed.from.name}}</a></div>
                             <br />
 
-                            <div style="font-weight: bold">{{feed.message_t}}</div>
+                            <div style="font-weight: bold">{{feed.message}}</div>
                             <br />
 
                             <div ng-if="feed.picture">
@@ -71,6 +71,9 @@
                                 <div>{{feed.description}}</div>
                                 <div>{{feed.link}}</div>
                             </div>
+
+                            <br />
+                            <div>Score: {{feed.score}}</div>
 
                         </md-card-content>
                     </md-card>

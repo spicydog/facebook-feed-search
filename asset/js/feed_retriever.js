@@ -86,6 +86,8 @@ function processData(data) {
                 }
                 var document = {"id":feedData.id,"time":timestamp,"type":feedData.type};
                 addDocumentToBarrel(message,document)
+
+                mFeedData.push(feedData);
             }
 
         }
@@ -122,6 +124,14 @@ function checkIsNewFeed(feedData) {
     return !isExisted;
 }
 
+function getFeedData(id) {
+    for(i in mFeedData) {
+        if(mFeedData[i].id == id) {
+            return mFeedData[i];
+        }
+    }
+    return false;
+}
 
 function generateFeedRequestURL(accessToken,since,until,limit) {
 

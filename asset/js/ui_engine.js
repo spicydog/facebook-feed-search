@@ -2,12 +2,19 @@ var myApp = angular.module('JournalSearch', []);
 
 myApp.controller('AppCtrl', function($scope) {
 
-    $scope.feeds = mFeedData;
-
+    $scope.requestCount = 0;
 
     $scope.clickSearch = function(keyword) {
         var documents = search(keyword);
+        var feedResults = [];
 
+        for(i in documents) {
+            var document = documents[i];
+            var feedData = getFeedData(document.id);
+            feedData.score = document.score;
+            feedResults.push(feedData);
+        }
+        $scope.feedResults = feedResults;
     };
 
     $scope.clickRequest = function() {
@@ -22,8 +29,7 @@ myApp.controller('AppCtrl', function($scope) {
     };
 
     var updateArray = function() {
-        $scope.feeds.count = globalDocuments.length;
-        $scope.feeds = mFeedData;
+        $scope.requestCount = globalDocuments.length;
     };
 
     var timer = setInterval(function() {
