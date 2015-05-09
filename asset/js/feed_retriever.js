@@ -7,7 +7,7 @@ var isRequesting = false;
 function autoRequest() {
     isRequesting = false;
     requestMode = 1;
-    getData();
+    requestFeeds();
 }
 
 function convertDateTimeToUnix(time) {
@@ -28,7 +28,7 @@ var requestMode = 0;
 
 
 
-function getData() {
+function requestFeeds() {
     if(latestFeedTimestamp == 0 && oldestFeedTimestamp == 0) {
         console.log("Request initial feeds");
         var url = generateFeedRequestURL(mAccessToken,0,0,0);
@@ -95,7 +95,7 @@ function processData(data) {
         console.log("Indexed " + newFeedCount + " feeds.");
         nextPage = data.paging.next;
         if(isRequesting) {
-            getData();
+            requestFeeds();
         }
     } else {
         if(requestMode==1) {
@@ -107,7 +107,7 @@ function processData(data) {
             console.log("No more old feed, requesting process complete.");
             isRequesting = false;
         }
-        getData();
+        requestFeeds();
     }
 }
 

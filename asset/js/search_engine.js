@@ -1,33 +1,45 @@
 
+var k1 = 1.2;
+var b = 0.75;
+
 var globalDictionary;
 var globalDocuments;
-var currentWordIndex = 0;
+var nDocumentWithTerm;
+var currentWordIndex;
+var totalDocumentsLength;
 
 initSearchEngine();
 
 function initSearchEngine() {
-    globalDictionary = new Array();
-    globalDocuments = new Array();
+    globalDictionary = [];
+    globalDocuments = [];
+    nDocumentWithTerm = [];
     currentWordIndex = 0;
+    totalDocumentsLength = 0;
     buildThaiDictionary();
 }
 
 function addDocumentToBarrel(data,document) {
 
     data = tokenize(data).join(' ');
-    var result = indexData(data,globalDictionary);
 
+    totalDocumentsLength += data.length;
+
+    var result = indexDocument(data,globalDictionary);
+
+    document.docID = globalDocuments.length;
     document.begin = result.begin;
     document.end = result.end;
+    document.length = data.length;
 
     globalDocuments.push(document);
 }
 
-function indexData(data, dictionary) {
+function indexDocument(data, dictionary) {
 
     var words = data.split(" ");
-
     var nextIndex = currentWordIndex;
+    var wordMarks = [];
 
     for(var i in words) {
         var word = words[i];
@@ -36,11 +48,20 @@ function indexData(data, dictionary) {
             if(dictionary[word]) {
                 index = dictionary[word].length;
             } else {
-                dictionary[word] = new Array();
+                dictionary[word] = [];
             }
             dictionary[word][index] = nextIndex;
             nextIndex++;
         }
+
+        if(!wordMarks[word]) {
+            if(nDocumentWithTerm[word]) {
+                nDocumentWithTerm[word]++;
+            } else {
+                nDocumentWithTerm[word] = 1;
+            }
+        }
+        wordMarks[word] = true;
     }
 
     var fromIndex = currentWordIndex;
@@ -71,7 +92,7 @@ function getDocumentInfo(documentID) {
 }
 
 function getSortedIndices(array) {
-    var indices = new Array();
+    var indices = [];
     for(var key in array) {
         indices.push(key);
     }
@@ -88,20 +109,79 @@ function getSortedIndices(array) {
     return indices;
 }
 
-function printDictionary(dictionary,n) {
-    var result = "";
-    for(word in dictionary) {
-        if(n--<=0)
-            break;
+function search(keyword) {
+    var keywords = tokenize(keyword);
+    var scores = getDocumentsScores(keywords);
+    var sortedIndex = getSortedIndices(scores).reverse();
 
-        var positions = dictionary[word];
-        result += word + " ("+ positions.length +")" + ": ";
-        for(i in positions) {
-            var position = positions[i];
-            result += position + ", ";
+    var sortedDocuments = [];
+    for(var i in sortedIndex) {
+        var docID = sortedIndex[i];
+        if(scores[docID]>0) {
+            globalDocuments[docID].score = scores[docID];
+            sortedDocuments.push(globalDocuments[docID]);
         }
-        result = result.substr(0, result.length - 2);
-        result += "\n";
     }
-    return result;
+    return sortedDocuments;
+}
+
+
+function getDocumentsScores(terms) {
+    var scores = [];
+
+    for(var i in terms) {
+        var term = terms[i];
+        calculateTermFrequencyInDocuments(term);
+        for(var j in globalDocuments) {
+            var document = globalDocuments[j];
+            var score = bm25(term,document);
+            if(scores[j]===undefined) {
+                scores[j] = score;
+            } else {
+                scores[j] += score;
+            }
+        }
+    }
+
+    return scores;
+}
+
+
+function bm25(term,document) {
+    return getIDF(term) * getTF(document);
+}
+
+function getIDF(term) {
+    var nq = nDocumentWithTerm[term];
+    var n = globalDocuments.length;
+    return  Math.log((n - nq + 0.5) / (nq + 0.5));
+}
+
+function getTF(document) {
+    var fQD = getTermFrequencyInDocument(document);
+    var avgDocLength = totalDocumentsLength/document.length;
+    var docLength = document.length;
+    return ( fQD * (k1+1) ) / (fQD + k1 * (1-b + b*docLength/avgDocLength) );
+}
+
+var termFrequencyInDocuments;
+function calculateTermFrequencyInDocuments(term) {
+    termFrequencyInDocuments = [];
+    var termDictionary = globalDictionary[term];
+    for(var i in termDictionary) {
+        var docID = getDocumentID(termDictionary[i]);
+        if(termFrequencyInDocuments[docID]) {
+            termFrequencyInDocuments[docID]++;
+        } else {
+            termFrequencyInDocuments[docID] = 1;
+        }
+    }
+}
+
+function getTermFrequencyInDocument(document) {
+    if(termFrequencyInDocuments[document.docID]) {
+        return termFrequencyInDocuments[document.docID];
+    } else {
+        return 0;
+    }
 }

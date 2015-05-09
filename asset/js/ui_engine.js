@@ -4,6 +4,12 @@ myApp.controller('AppCtrl', function($scope) {
 
     $scope.feeds = mFeedData;
 
+
+    $scope.clickSearch = function(keyword) {
+        var documents = search(keyword);
+
+    };
+
     $scope.clickRequest = function() {
         if(isRequesting) {
             isRequesting = false;
@@ -11,7 +17,7 @@ myApp.controller('AppCtrl', function($scope) {
         } else {
             isRequesting = true;
             requestMode = 1;
-            getData();
+            requestFeeds();
         }
     };
 
