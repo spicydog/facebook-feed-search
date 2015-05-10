@@ -23,38 +23,47 @@ var latestFeedTimestamp = 0;
 var oldestFeedTimestamp = 0;
 var requestMode = 0;
 
-//"previous": "https://graph.facebook.com/v2.3/10152644715888571/feed?since=1430614491&limit=25&__paging_token=enc_AdDMkZCHjZCxYzR4Ve82RkRvQqyrw8pdMZA3Agttin0MqAnIk91af1eXhp488Bn6CNvoW1FpEj11RjzVZCNH5nQtZACS6",
-//    "next": "https://graph.facebook.com/v2.3/10152644715888571/feed?limit=25&until=1429798256&__paging_token=enc_AdC84BDHvCjTozxZB2s5ssbxF7fSxBUF8cGZB29YYnqzi1swXdi3ArF0QCvyCuWZAJdxIW4Ck3kVladdDZCUz9cLmDTC"
-
-
 
 function requestFeeds() {
+    var url;
     if(latestFeedTimestamp == 0 && oldestFeedTimestamp == 0) {
         console.log("Request initial feeds");
-        var url = generateFeedRequestURL(mAccessToken,0,0,0);
-        requestFeed(url);
+        url = generateFeedRequestURL(mAccessToken,0,0,0);
     } else if(requestMode==1) {
         console.log("Request NEWER feeds from: " + new Date(latestFeedTimestamp*1000));
-        var url = generateFeedRequestURL(mAccessToken,latestFeedTimestamp,0,0);
-        requestFeed(url);
+        url = generateFeedRequestURL(mAccessToken,latestFeedTimestamp,0,0);
     } else if(requestMode==-1) {
         console.log("Request OLDER feeds from: " + new Date(oldestFeedTimestamp*1000));
-        var url = generateFeedRequestURL(mAccessToken,0,oldestFeedTimestamp,0);
+        url = generateFeedRequestURL(mAccessToken,0,oldestFeedTimestamp,0);
+    }
+    if(url) {
         requestFeed(url);
     }
 }
 
 function requestFeed(url) {
-
     if(isRequesting) {
-        $.get( url, function( data ) {
-            processData(data);
+        callAjax(url, function(response) {
+            processData(JSON.parse(response));
         });
     }
 }
 
-function processData(data) {
+function callAjax(url, callback){
+    // Code from: http://stackoverflow.com/a/18324384/967802
+    var xmlhttp;
+    // compatible with IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+            callback(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
 
+function processData(data) {
     var newFeedCount = 0;
     for(i in data.data) {
         var feedData = data.data[i];
@@ -111,6 +120,10 @@ function processData(data) {
         }
         requestFeeds();
     }
+
+
+    storySearchApp.scope.updateRequestSummary();
+    storySearchApp.scope.$apply();
 }
 
 function checkIsNewFeed(feedData) {

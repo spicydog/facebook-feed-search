@@ -13,9 +13,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.js"></script>
 
-    <script>
-    </script>
-
+    <!-- Facebook -->
+    <script type="text/javascript" src="asset/js/facebook.js"></script>
 
 </head>
 
@@ -34,7 +33,7 @@
         <fb:login-button scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
     </div>
     <div class="md-toolbar-tools" layout-align-gt-sm="center">
-        <md-button class="md-raised md-primary"  ng-click="clickRequest()">Request</md-button>
+        <md-button class="md-raised md-primary"  ng-click="clickRequest()">{{requestButton}}</md-button>
         <div>Total Feed: <span>{{requestCount}}</span></div>
     </div>
 
@@ -110,12 +109,6 @@
             </md-content>
         </div>
     </div>
-
-    <!-- jQuery -->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
-
-    <!-- Facebook -->
-    <script type="text/javascript" src="asset/js/facebook.js"></script>
 
     <!-- My Scripts -->
     <script type="text/javascript" src="https://spicydog.github.io/ThaiTokenizer/js/tokenizer.js"></script>
