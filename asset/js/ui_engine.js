@@ -9,16 +9,25 @@ storySearchApp.controller('AppCtrl', function($scope) {
     $scope.requestButton = 'Request';
 
     $scope.clickSearch = function(keyword) {
-        var documents = search(keyword);
-        var feedResults = [];
 
-        for(i in documents) {
-            var document = documents[i];
-            var feedData = getFeedData(document.id);
-            feedData.score = document.score;
-            feedResults.push(feedData);
-        }
-        $scope.feedResults = feedResults;
+        $scope.$applyAsync(function() {
+            var documents = search(keyword);
+            var feedResults = [];
+
+            var count = 0;
+            for(i in documents) {
+                var document = documents[i];
+                var feedData = getFeedData(document.id);
+                feedData.score = document.score;
+                feedResults.push(feedData);
+
+                if(++count>50) {
+                    break;
+                }
+            }
+            $scope.feedResults = feedResults;
+        });
+
     };
 
     $scope.clickRequest = function() {
@@ -30,7 +39,6 @@ storySearchApp.controller('AppCtrl', function($scope) {
             requestMode = 1;
             requestFeeds();
         }
-        $scope.updateRequestSummary();
     };
 
     $scope.updateRequestSummary = function() {
@@ -43,7 +51,6 @@ storySearchApp.controller('AppCtrl', function($scope) {
             $scope.requestButton ='Request';
         }
     };
-
     $scope.updateRequestSummary();
 });
 
