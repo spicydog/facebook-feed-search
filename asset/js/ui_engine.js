@@ -1,4 +1,6 @@
-var myApp = angular.module('JournalSearch', []);
+var myApp = angular.module('StorySearch', ['ngMaterial']);
+
+
 
 myApp.controller('AppCtrl', function($scope) {
 
