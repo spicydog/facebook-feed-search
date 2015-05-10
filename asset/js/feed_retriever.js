@@ -85,7 +85,7 @@ function processData(data) {
             if(!getDocumentInfo(feedData.id)) {
                 newFeedCount++;
 
-                var message = '';
+                var message = feedData.from.name + " ";
                 if(feedData.message) {
                     message += feedData.message + " ";
                 }
