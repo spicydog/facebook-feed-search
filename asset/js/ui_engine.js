@@ -21,6 +21,8 @@ storySearchApp.controller('AppCtrl', function($scope) {
     $scope.isSearch = false;
     $scope.keyword = '';
 
+    $scope.order = $scope.isSearch ? '-score':'-timestamp';
+
     $scope.searchResult = {};
     $scope.searchResult.keyword = '';
     $scope.searchResult.number = 0;
@@ -35,13 +37,13 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     $scope.clickSearch = function(keyword) {
 
+        if($scope.keyword != keyword) {
+            $scope.quantity = $scope.defaultQuantity;
+        }
+        $scope.keyword = keyword;
+
         if(keyword.length>0) {
 
-            if($scope.keyword != keyword) {
-                $scope.quantity = $scope.defaultQuantity;
-            }
-
-            $scope.keyword = keyword;
             $scope.$applyAsync(function() {
                 var documents = search(keyword);
                 var feedResults = [];
@@ -53,12 +55,15 @@ storySearchApp.controller('AppCtrl', function($scope) {
                 }
                 $scope.feedResults = feedResults;
                 $scope.isSearch = true;
-
                 $scope.searchResult.keyword = keyword;
-                $scope.searchResult.number = documents.length;
+                $scope.searchResult.number = $scope.feedResults.length;
+
             });
-
-
+        } else {
+            $scope.feedResults = mFeedData;
+            $scope.isSearch = false;
+            $scope.searchResult.keyword = keyword;
+            $scope.searchResult.number = $scope.feedResults.length;
         }
 
     };
@@ -113,5 +118,23 @@ storySearchApp.directive('selectOnClick', function () {
                 this.select();
             });
         }
+    };
+});
+
+
+storySearchApp.directive("scrolledToBottom", function ($window) {
+    var lastScrollHeight = document.body.scrollHeight;
+    return function(scope, element, attrs) {
+        angular.element($window).bind("scroll", function() {
+            if(document.body.scrollHeight-document.body.scrollTop-document.documentElement.clientHeight < 50) {
+                // At the end of the screen
+                if(lastScrollHeight != document.body.scrollHeight) {
+                    scope.clickShowMore();
+                    lastScrollHeight = document.body.scrollHeight;
+                }
+
+            }
+
+        });
     };
 });

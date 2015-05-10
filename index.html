@@ -23,7 +23,7 @@
 </head>
 
 
-<body layout="column" ng-controller="AppCtrl">
+<body layout="column" ng-controller="AppCtrl" scrolled-to-bottom>
 
 <md-toolbar layout="row">
 
@@ -36,7 +36,7 @@
 
     <div class="md-toolbar-tools" flex="33" layout-align="end">
         <div layout="row" layout-align="end center" class="ng-hide" ng-hide="!isLoggedIn">
-            <div class="md-body-2" hide-sm>Feeds: <span>{{requestCount}}</span></div>
+            <div class="md-body-2" hide-sm>{{requestCount}} feeds</div>
             <md-button class="md-raised" ng-click="clickRequest()">{{requestButton}}</md-button>
         </div>
     </div>
@@ -69,14 +69,15 @@
                 </md-button>
             </div>
 
-            <div layout="row" class="md-caption">
+            <div layout="row" class="md-caption"  ng-if="isSearch">
                 <div>Search: {{searchResult.keyword}} ({{searchResult.number}} results)</div>
             </div>
+
 
             <div layout="row" flex layout-align-gt-md="center">
                 <div layout="column" flex>
                     <md-content there-is-more>
-                        <md-card ng-repeat="feed in feedResults | orderBy:'-score' | limitTo:quantity" class="ng-hide" ng-hide="isFinishLoading">
+                        <md-card ng-repeat="feed in feedResults | orderBy:order | limitTo:quantity" class="ng-hide" ng-hide="isFinishLoading">
                             <md-card-content>
 
                                 <div layout="column">
@@ -120,7 +121,7 @@
                                     </div>
 
 
-                                    <div layout="row" layout-align="end" flex>
+                                    <div layout="row" layout-align="end" flex ng-if="isSearch">
                                         <div class="md-caption">
                                             Score: {{feed.score.toFixed(4)}}
                                         </div>
@@ -133,7 +134,7 @@
 
 
                         <div layout="row" class="ng-hide" ng-hide="searchResult.number<quantity">
-                            <md-button flex class="md-raised" ng-click="clickShowMore()">Show More..</md-button>
+                            <md-button flex class="md-raised" ng-click="clickShowMore()">Show More</md-button>
                         </div>
                     </md-content>
                     </md-content>
