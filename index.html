@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link rel="stylesheet" href="asset/css/main.css">
     <meta name="viewport" content="initial-scale=1" />
 
 
@@ -68,6 +69,10 @@
                 </md-button>
             </div>
 
+            <div layout="row" class="md-caption">
+                <div>Search: {{searchResult.keyword}} ({{searchResult.number}} results)</div>
+            </div>
+
             <div layout="row" flex layout-align-gt-md="center">
                 <div layout="column" flex>
                     <md-content>
@@ -83,13 +88,13 @@
                                             </a>
                                         </div>
                                         <div class="md-padding" layout="column" flex>
-                                            <div class="md-body-2">
-                                                <a target="_blank" href="http://facebook.com/{{feed.from.id}}">
+                                            <div class="md-title">
+                                                <a target="_blank" href="http://facebook.com/{{feed.from.id}}" class="md-title">
                                                     {{feed.from.name}}
                                                 </a>
                                             </div>
                                             <div class="md-caption">
-                                                <a target="_blank" href="{{feed.actions[0].link}}">
+                                                <a target="_blank" href="{{feed.actions[0].link}}" class="time" class="md-caption">
                                                     {{feed.updated_time}}
                                                 </a>
                                             </div>
@@ -117,7 +122,7 @@
 
                                     <div layout="row" layout-align="end" flex>
                                         <div class="md-caption">
-                                            Score: {{feed.score}}
+                                            Score: {{feed.score.toFixed(4)}}
                                         </div>
                                     </div>
                                 </div>

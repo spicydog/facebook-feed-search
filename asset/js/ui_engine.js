@@ -1,5 +1,11 @@
 var storySearchApp = angular.module('StorySearch', ['ngMaterial']);
 
+storySearchApp.config(function($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('indigo')
+    });
+
+
 storySearchApp.controller('AppCtrl', function($scope) {
 
     storySearchApp.scope = $scope;
@@ -8,25 +14,45 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     $scope.requestButton = 'Request';
 
+    $scope.isSearch = false;
+    $scope.keyword = '';
+
+    $scope.searchResult = {};
+    $scope.searchResult.keyword = '';
+    $scope.searchResult.number = 0;
+
+    $scope.refreshSearch = function() {
+        $scope.clickSearch($scope.keyword);
+    };
+
     $scope.clickSearch = function(keyword) {
 
-        $scope.$applyAsync(function() {
-            var documents = search(keyword);
-            var feedResults = [];
+        if(keyword.length>0) {
 
-            var count = 0;
-            for(i in documents) {
-                var document = documents[i];
-                var feedData = getFeedData(document.id);
-                feedData.score = document.score;
-                feedResults.push(feedData);
+            $scope.keyword = keyword;
+            $scope.$applyAsync(function() {
+                var documents = search(keyword);
+                var feedResults = [];
+                var count = 0;
+                for(i in documents) {
+                    var document = documents[i];
+                    var feedData = getFeedData(document.id);
+                    feedData.score = document.score;
+                    feedResults.push(feedData);
 
-                if(++count>50) {
-                    break;
+                    if(++count>50) {
+                        break;
+                    }
                 }
-            }
-            $scope.feedResults = feedResults;
-        });
+                $scope.feedResults = feedResults;
+                $scope.isSearch = true;
+
+                $scope.searchResult.keyword = keyword;
+                $scope.searchResult.number = documents.length;
+            });
+
+
+        }
 
     };
 
@@ -50,6 +76,8 @@ storySearchApp.controller('AppCtrl', function($scope) {
         } else {
             $scope.requestButton ='Request';
         }
+
+        $scope.refreshSearch();
     };
     $scope.updateRequestSummary();
 });
