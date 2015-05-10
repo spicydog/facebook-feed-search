@@ -47,3 +47,29 @@ storySearchApp.controller('AppCtrl', function($scope) {
     $scope.updateRequestSummary();
 });
 
+storySearchApp.directive('ngEnter', function () {
+    // From: http://stackoverflow.com/a/17472118/967802
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+storySearchApp.directive('selectOnClick', function () {
+    // From: http://stackoverflow.com/a/14996261/967802
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                this.select();
+            });
+        }
+    };
+});

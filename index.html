@@ -35,7 +35,7 @@
 
     <div class="md-toolbar-tools" flex="33" layout-align="end">
         <div layout="row" layout-align="end center" class="ng-hide" ng-hide="!isLoggedIn">
-            <div>Total Feed: <span>{{requestCount}}</span></div>
+            <div class="md-body-2" hide-sm>Feeds: <span>{{requestCount}}</span></div>
             <md-button class="md-raised" ng-click="clickRequest()">{{requestButton}}</md-button>
         </div>
     </div>
@@ -49,77 +49,91 @@
     </div>
 </div>
 
-<div layout="column" flex class="ng-hide" ng-hide="!isLoggedIn">
-
-    <div layout="row" layout-align-gt-sm="center center">
-        <md-input-container flex="45">
-            <input ng-model="search.keyword" type="text" placeholder="Keyword" >
-        </md-input-container>
-        <md-button class="md-raised md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)">search</md-button>
-    </div>
+<div layout="column" class="ng-hide" ng-hide="!isLoggedIn">
 
 
-    <div layout="row" flex layout-align-gt-md="center">
-        <div layout="column" flex>
-            <md-content>
-                <md-card ng-repeat="feed in feedResults | orderBy:'-score'" class="ng-hide" ng-hide="isFinishLoading">
-                    <md-card-content>
 
-                        <div layout="column">
+    <div layout="row">
+        <div flex-gt-md="20" flex-gt-sm="10" ></div>
+        <div flex>
 
-                            <div layout="row">
-                                <div class="md-padding">
-                                    <a target="_blank" href="http://facebook.com/{{feed.from.id}}">
-                                        <img src="http://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
-                                    </a>
-                                </div>
-                                <div class="md-padding" layout="column" flex>
-                                    <div class="md-body-2">
-                                        <a target="_blank" href="http://facebook.com/{{feed.from.id}}">
-                                            {{feed.from.name}}
+            <div layout="row" layout-sm="column">
+                <md-input-container flex>
+                    <label>Search</label>
+                    <input ng-model="search.keyword" select-on-click ng-enter="clickSearch(search.keyword)">
+                </md-input-container>
+
+                <md-button class="md-icon-button md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)" aria-label="Search">
+                    <md-icon md-svg-icon="asset/img/magnifying-glass.svg"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" flex layout-align-gt-md="center">
+                <div layout="column" flex>
+                    <md-content>
+                        <md-card ng-repeat="feed in feedResults | orderBy:'-score'" class="ng-hide" ng-hide="isFinishLoading">
+                            <md-card-content>
+
+                                <div layout="column">
+
+                                    <div layout="row">
+                                        <div class="md-padding">
+                                            <a target="_blank" href="http://facebook.com/{{feed.from.id}}">
+                                                <img src="http://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
+                                            </a>
+                                        </div>
+                                        <div class="md-padding" layout="column" flex>
+                                            <div class="md-body-2">
+                                                <a target="_blank" href="http://facebook.com/{{feed.from.id}}">
+                                                    {{feed.from.name}}
+                                                </a>
+                                            </div>
+                                            <div class="md-caption">
+                                                <a target="_blank" href="{{feed.actions[0].link}}">
+                                                    {{feed.updated_time}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div layout="column">
+                                        <div class="md-body-1">
+                                            {{feed.message}}
+                                        </div>
+                                    </div>
+
+
+                                    <div layout="row" ng-if="feed.picture">
+                                        <a target="_blank" href="{{feed.link}}">
+                                            <img src="{{feed.picture}}" />
                                         </a>
                                     </div>
-                                    <div class="md-caption">
-                                        <a target="_blank" href="{{feed.actions[0].link}}">
-                                            {{feed.updated_time}}
-                                        </a>
+
+                                    <div layout="column" ng-if="feed.link">
+                                        <div class="md-caption"><a target="_blank" href="{{feed.link}}">{{feed.caption}}</a></div>
+                                        <div class="md-caption">{{feed.description}}</div>
+                                    </div>
+
+
+                                    <div layout="row" layout-align="end" flex>
+                                        <div class="md-caption">
+                                            Score: {{feed.score}}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div layout="column">
-                                <div class="md-body-1">
-                                    {{feed.message}}
-                                </div>
-                            </div>
 
 
-                            <div layout="row" ng-if="feed.picture">
-                                <a target="_blank" href="{{feed.link}}">
-                                    <img src="{{feed.picture}}" />
-                                </a>
-                            </div>
-
-                            <div layout="column" ng-if="feed.link">
-                                <div class="md-caption"><a target="_blank" href="{{feed.link}}">{{feed.caption}}</a></div>
-                                <div class="md-caption">{{feed.description}}</div>
-                            </div>
-
-
-                            <div layout="row" layout-align="end" flex>
-                                <div class="md-caption">
-                                    Score: {{feed.score}}
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </md-card-content>
-                </md-card>
-            </md-content>
-            </md-content>
+                            </md-card-content>
+                        </md-card>
+                    </md-content>
+                    </md-content>
+                </div>
+            </div>
         </div>
+        <div flex-gt-md="20" flex-gt-sm="10" ></div>
     </div>
+
+
 </div>
 
     <!-- My Scripts -->
