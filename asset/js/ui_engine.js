@@ -33,7 +33,6 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     $scope.updateRequestSummary = function() {
 
-        console.log('x' + globalDocuments.length);
         $scope.requestCount = globalDocuments.length;
 
         if(isRequesting) {
