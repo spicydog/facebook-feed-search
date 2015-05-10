@@ -29,12 +29,12 @@
 
 <div layout="row">
 
-    <div class="md-toolbar-tools" layout-align-gt-sm="center">
+    <div class="md-toolbar-tools" layout-align-gt-sm="start">
         <fb:login-button scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
     </div>
-    <div class="md-toolbar-tools" layout-align-gt-sm="center">
-        <md-button class="md-raised md-primary"  ng-click="clickRequest()">{{requestButton}}</md-button>
+    <div class="md-toolbar-tools" layout-align-gt-sm="end">
         <div>Total Feed: <span>{{requestCount}}</span></div>
+        <md-button class="md-raised md-primary"  ng-click="clickRequest()">{{requestButton}}</md-button>
     </div>
 
 </div>
