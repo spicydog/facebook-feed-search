@@ -4,7 +4,6 @@ var mFeedData = [];
 
 var isRequesting = false;
 
-autoRequest();
 function autoRequest() {
     isRequesting = true;
     requestMode = 1;

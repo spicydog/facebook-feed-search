@@ -4,6 +4,8 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     storySearchApp.scope = $scope;
 
+    $scope.isLoggedIn = false;
+
     $scope.requestButton = 'Request';
 
     $scope.clickSearch = function(keyword) {

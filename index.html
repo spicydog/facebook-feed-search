@@ -13,6 +13,9 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.js"></script>
 
+    <!-- Angular Controller -->
+    <script src="asset/js/ui_engine.js"></script>
+
     <!-- Facebook -->
     <script type="text/javascript" src="asset/js/facebook.js"></script>
 
@@ -22,30 +25,38 @@
 <body layout="column" ng-controller="AppCtrl">
 
 <md-toolbar layout="row">
-    <h1 class="md-toolbar-tools" layout-align-gt-sm="center">
+
+    <div class="md-toolbar-tools" flex-gt-sm="33" flex-sm="0">
+    </div>
+
+    <h1 class="md-toolbar-tools" flex  layout-align-gt-sm="center">
         Story Search
     </h1>
+
+    <div class="md-toolbar-tools" flex="33" layout-align="end">
+        <div layout="row" layout-align="end center" class="ng-hide" ng-hide="!isLoggedIn">
+            <div>Total Feed: <span>{{requestCount}}</span></div>
+            <md-button class="md-raised" ng-click="clickRequest()">{{requestButton}}</md-button>
+        </div>
+    </div>
+
 </md-toolbar>
 
-<div layout="row">
 
-    <div class="md-toolbar-tools" layout-align-gt-sm="start">
-        <fb:login-button scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
+<div layout="column" flex layout-align="center center" class="ng-hide" ng-hide="isLoggedIn">
+    <div>
+        <fb:login-button data-size="xlarge" scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
     </div>
-    <div class="md-toolbar-tools" layout-align-gt-sm="end">
-        <div>Total Feed: <span>{{requestCount}}</span></div>
-        <md-button class="md-raised md-primary"  ng-click="clickRequest()">{{requestButton}}</md-button>
-    </div>
-
 </div>
 
+<div layout="column" flex class="ng-hide" ng-hide="!isLoggedIn">
 
-<div layout="row" layout-align-gt-sm="center center">
-    <md-input-container md-no-float flex="45">
-        <input ng-model="search.keyword" type="text" placeholder="Keyword" >
-    </md-input-container>
-    <md-button class="md-raised" ng-model="search.button" ng-click="clickSearch(search.keyword)">search</md-button>
-</div>
+    <div layout="row" layout-align-gt-sm="center center">
+        <md-input-container flex="45">
+            <input ng-model="search.keyword" type="text" placeholder="Keyword" >
+        </md-input-container>
+        <md-button class="md-raised md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)">search</md-button>
+    </div>
 
 
     <div layout="row" flex layout-align-gt-md="center">
@@ -109,13 +120,13 @@
             </md-content>
         </div>
     </div>
+</div>
 
     <!-- My Scripts -->
     <script type="text/javascript" src="https://spicydog.github.io/ThaiTokenizer/js/tokenizer.js"></script>
 
     <script src="asset/js/search_engine.js"></script>
     <script src="asset/js/feed_retriever.js"></script>
-    <script src="asset/js/ui_engine.js"></script>
 
 
 </body>
