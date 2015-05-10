@@ -1,10 +1,10 @@
-var myApp = angular.module('StorySearch', ['ngMaterial']);
+var storySearchApp = angular.module('StorySearch', ['ngMaterial']);
 
+storySearchApp.controller('AppCtrl', function($scope) {
 
+    storySearchApp.scope = $scope;
 
-myApp.controller('AppCtrl', function($scope) {
-
-    $scope.requestCount = 0;
+    $scope.requestButton = 'Request';
 
     $scope.clickSearch = function(keyword) {
         var documents = search(keyword);
@@ -28,16 +28,21 @@ myApp.controller('AppCtrl', function($scope) {
             requestMode = 1;
             requestFeeds();
         }
+        $scope.updateRequestSummary();
     };
 
-    var updateArray = function() {
+    $scope.updateRequestSummary = function() {
+
+        console.log('x' + globalDocuments.length);
         $scope.requestCount = globalDocuments.length;
+
+        if(isRequesting) {
+            $scope.requestButton = 'Stop';
+        } else {
+            $scope.requestButton ='Request';
+        }
     };
 
-    var timer = setInterval(function() {
-        $scope.$apply(updateArray);
-    }, 1000);
-
-    updateArray();
+    $scope.updateRequestSummary();
 });
 
