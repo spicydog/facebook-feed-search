@@ -1,22 +1,66 @@
 var storySearchApp = angular.module('StorySearch', ['ngMaterial']);
 
+
+storySearchApp.config(function($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('indigo')
+    });
+
+
 storySearchApp.controller('AppCtrl', function($scope) {
 
     storySearchApp.scope = $scope;
 
+    $scope.defaultQuantity = 10;
+    $scope.quantity = $scope.defaultQuantity;
+
+    $scope.isLoggedIn = false;
+
     $scope.requestButton = 'Request';
 
-    $scope.clickSearch = function(keyword) {
-        var documents = search(keyword);
-        var feedResults = [];
+    $scope.isSearch = false;
+    $scope.keyword = '';
 
-        for(i in documents) {
-            var document = documents[i];
-            var feedData = getFeedData(document.id);
-            feedData.score = document.score;
-            feedResults.push(feedData);
+    $scope.searchResult = {};
+    $scope.searchResult.keyword = '';
+    $scope.searchResult.number = 0;
+
+    $scope.refreshSearch = function() {
+        $scope.clickSearch($scope.keyword);
+    };
+
+    $scope.clickShowMore = function() {
+        $scope.quantity += $scope.defaultQuantity;
+    };
+
+    $scope.clickSearch = function(keyword) {
+
+        if(keyword.length>0) {
+
+            if($scope.keyword != keyword) {
+                $scope.quantity = $scope.defaultQuantity;
+            }
+
+            $scope.keyword = keyword;
+            $scope.$applyAsync(function() {
+                var documents = search(keyword);
+                var feedResults = [];
+                for(i in documents) {
+                    var document = documents[i];
+                    var feedData = getFeedData(document.id);
+                    feedData.score = document.score;
+                    feedResults.push(feedData);
+                }
+                $scope.feedResults = feedResults;
+                $scope.isSearch = true;
+
+                $scope.searchResult.keyword = keyword;
+                $scope.searchResult.number = documents.length;
+            });
+
+
         }
-        $scope.feedResults = feedResults;
+
     };
 
     $scope.clickRequest = function() {
@@ -28,7 +72,6 @@ storySearchApp.controller('AppCtrl', function($scope) {
             requestMode = 1;
             requestFeeds();
         }
-        $scope.updateRequestSummary();
     };
 
     $scope.updateRequestSummary = function() {
@@ -40,8 +83,35 @@ storySearchApp.controller('AppCtrl', function($scope) {
         } else {
             $scope.requestButton ='Request';
         }
-    };
 
+        $scope.refreshSearch();
+    };
     $scope.updateRequestSummary();
 });
 
+storySearchApp.directive('ngEnter', function () {
+    // From: http://stackoverflow.com/a/17472118/967802
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+storySearchApp.directive('selectOnClick', function () {
+    // From: http://stackoverflow.com/a/14996261/967802
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                this.select();
+            });
+        }
+    };
+});

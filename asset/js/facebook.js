@@ -9,16 +9,14 @@ function statusChangeCallback(response) {
         // Logged into your app and Facebook.
         var accessToken = response.authResponse.accessToken;
         setAccessToken(accessToken);
+        storySearchApp.scope.isLoggedIn = true;
     } else if (response.status === 'not_authorized') {
-        // The person is logged into Facebook, but not your app.
-        document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
+        storySearchApp.scope.isLoggedIn = false;
     } else {
-        // The person is not logged into Facebook, so we're not sure if
-        // they are logged into this app or not.
-        document.getElementById('status').innerHTML = 'Please log ' +
-        'into Facebook.';
+        storySearchApp.scope.isLoggedIn = false;
     }
+
+    storySearchApp.scope.$apply();
 }
 
 // This function is called when someone finishes with the Login
@@ -71,11 +69,5 @@ window.fbAsyncInit = function() {
 function setAccessToken(accessToken) {
     console.log('Welcome!  Fetching your information.... ');
     mAccessToken = accessToken;
-
     autoRequest();
-    //FB.api('/me', function(response) {
-    //    console.log('Successful login for: ' + response.name);
-    //    document.getElementById('status').innerHTML =
-    //        'Thanks for logging in, ' + response.name + '!';
-    //});
 }
