@@ -75,8 +75,8 @@
 
             <div layout="row" flex layout-align-gt-md="center">
                 <div layout="column" flex>
-                    <md-content>
-                        <md-card ng-repeat="feed in feedResults | orderBy:'-score'" class="ng-hide" ng-hide="isFinishLoading">
+                    <md-content there-is-more>
+                        <md-card ng-repeat="feed in feedResults | orderBy:'-score' | limitTo:quantity" class="ng-hide" ng-hide="isFinishLoading">
                             <md-card-content>
 
                                 <div layout="column">
@@ -130,6 +130,11 @@
 
                             </md-card-content>
                         </md-card>
+
+
+                        <div layout="row" class="ng-hide" ng-hide="searchResult.number<quantity">
+                            <md-button flex class="md-raised" ng-click="clickShowMore()">Show More..</md-button>
+                        </div>
                     </md-content>
                     </md-content>
                 </div>

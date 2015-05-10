@@ -1,5 +1,6 @@
 var storySearchApp = angular.module('StorySearch', ['ngMaterial']);
 
+
 storySearchApp.config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('indigo')
@@ -9,6 +10,9 @@ storySearchApp.config(function($mdThemingProvider) {
 storySearchApp.controller('AppCtrl', function($scope) {
 
     storySearchApp.scope = $scope;
+
+    $scope.defaultQuantity = 10;
+    $scope.quantity = $scope.defaultQuantity;
 
     $scope.isLoggedIn = false;
 
@@ -25,24 +29,27 @@ storySearchApp.controller('AppCtrl', function($scope) {
         $scope.clickSearch($scope.keyword);
     };
 
+    $scope.clickShowMore = function() {
+        $scope.quantity += $scope.defaultQuantity;
+    };
+
     $scope.clickSearch = function(keyword) {
 
         if(keyword.length>0) {
+
+            if($scope.keyword != keyword) {
+                $scope.quantity = $scope.defaultQuantity;
+            }
 
             $scope.keyword = keyword;
             $scope.$applyAsync(function() {
                 var documents = search(keyword);
                 var feedResults = [];
-                var count = 0;
                 for(i in documents) {
                     var document = documents[i];
                     var feedData = getFeedData(document.id);
                     feedData.score = document.score;
                     feedResults.push(feedData);
-
-                    if(++count>50) {
-                        break;
-                    }
                 }
                 $scope.feedResults = feedResults;
                 $scope.isSearch = true;
