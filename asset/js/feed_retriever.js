@@ -11,9 +11,8 @@ function autoRequest() {
 }
 
 function convertDateTimeToUnix(time) {
-
     // To make it work on Safari, I use the code from
-    // https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+    // http://stackoverflow.com/a/6427318/967802
     var str = time.split(/[^0-9]/);
     var date = new Date (str[0],str[1]-1,str[2],str[3],str[4],str[5]);
     return (date.getTime()/1000);

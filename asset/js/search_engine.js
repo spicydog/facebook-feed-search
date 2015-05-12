@@ -2,8 +2,8 @@
 var k1 = 1.2;
 var b = 0.75;
 
-var globalDictionary;
-var globalDocuments;
+var invertedIndex;
+var documentList;
 var nDocumentWithTerm;
 var currentWordIndex;
 var totalDocumentsLength;
@@ -11,8 +11,8 @@ var totalDocumentsLength;
 initSearchEngine();
 
 function initSearchEngine() {
-    globalDictionary = [];
-    globalDocuments = [];
+    invertedIndex = [];
+    documentList = [];
     nDocumentWithTerm = [];
     currentWordIndex = 0;
     totalDocumentsLength = 0;
@@ -23,16 +23,16 @@ function addDocumentToBarrel(data,document) {
 
     var normalizedData = tokenize(data);
     var documentLength = normalizedData.length;
-    var result = indexDocument(normalizedData,globalDictionary);
+    var result = indexDocument(normalizedData,invertedIndex);
 
-    document.docID = globalDocuments.length;
+    document.docID = documentList.length;
     document.begin = result.begin;
     document.end = result.end;
     document.length = documentLength;
 
     totalDocumentsLength += documentLength;
 
-    globalDocuments.push(document);
+    documentList.push(document);
 }
 
 function indexDocument(data, dictionary) {
@@ -72,8 +72,8 @@ function indexDocument(data, dictionary) {
 }
 
 function getDocumentID(position) {
-    for(var i in globalDocuments) {
-        doc = globalDocuments[i];
+    for(var i in documentList) {
+        doc = documentList[i];
         if(doc.begin<=position && position<=doc.end) {
             return i;
         }
@@ -82,8 +82,8 @@ function getDocumentID(position) {
 }
 
 function getDocumentInfo(documentID) {
-    for(var i in globalDocuments) {
-        doc = globalDocuments[i];
+    for(var i in documentList) {
+        doc = documentList[i];
         if(doc.id == documentID) {
             return doc;
         }
@@ -118,8 +118,8 @@ function search(keyword) {
     for(var i in sortedIndex) {
         var docID = sortedIndex[i];
         if(scores[docID]>0) {
-            globalDocuments[docID].score = scores[docID];
-            sortedDocuments.push(globalDocuments[docID]);
+            documentList[docID].score = scores[docID];
+            sortedDocuments.push(documentList[docID]);
         }
     }
     return sortedDocuments;
@@ -132,8 +132,8 @@ function getDocumentsScores(terms) {
     for(var i in terms) {
         var term = terms[i];
         calculateTermFrequencyInDocuments(term);
-        for(var j in globalDocuments) {
-            var document = globalDocuments[j];
+        for(var j in documentList) {
+            var document = documentList[j];
             var score = bm25(term,document);
             if(scores[j]===undefined) {
                 scores[j] = score;
@@ -153,7 +153,7 @@ function bm25(term,document) {
 
 function getIDF(term) {
     var nq = nDocumentWithTerm[term];
-    var n = globalDocuments.length;
+    var n = documentList.length;
     return  Math.log((n - nq + 0.5) / (nq + 0.5));
 }
 
@@ -167,7 +167,7 @@ function getTF(document) {
 var termFrequencyInDocuments;
 function calculateTermFrequencyInDocuments(term) {
     termFrequencyInDocuments = [];
-    var termDictionary = globalDictionary[term];
+    var termDictionary = invertedIndex[term];
     for(var i in termDictionary) {
         var docID = getDocumentID(termDictionary[i]);
         if(termFrequencyInDocuments[docID]) {
