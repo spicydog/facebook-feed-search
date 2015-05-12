@@ -81,7 +81,7 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     $scope.updateRequestSummary = function() {
 
-        $scope.requestCount = globalDocuments.length;
+        $scope.requestCount = documentList.length;
 
         if(isRequesting) {
             $scope.requestButton = 'Stop';
