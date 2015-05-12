@@ -21,23 +21,23 @@ function initSearchEngine() {
 
 function addDocumentToBarrel(data,document) {
 
-    data = tokenize(data).join(' ');
-
-    totalDocumentsLength += data.length;
-
-    var result = indexDocument(data,globalDictionary);
+    var normalizedData = tokenize(data);
+    var documentLength = normalizedData.length;
+    var result = indexDocument(normalizedData,globalDictionary);
 
     document.docID = globalDocuments.length;
     document.begin = result.begin;
     document.end = result.end;
-    document.length = data.length;
+    document.length = documentLength;
+
+    totalDocumentsLength += documentLength;
 
     globalDocuments.push(document);
 }
 
 function indexDocument(data, dictionary) {
 
-    var words = data.split(" ");
+    var words = data;
     var nextIndex = currentWordIndex;
     var wordMarks = [];
 
