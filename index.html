@@ -32,140 +32,155 @@
 </head>
 
 
-<body layout="column" ng-controller="AppCtrl" scrolled-to-bottom>
+<body>
 
-<md-toolbar layout="row" class="ng-hide" ng-hide="!isLoggedIn">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=941693502538221";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
-    <div class="md-toolbar-tools" flex-gt-sm="33" flex-sm="0">
-    </div>
+<div ng-controller="AppCtrl" layout="column" layout-fill>
 
-    <h1 class="md-toolbar-tools" flex  layout-align-gt-sm="center">
-        Facebook Story Search
-    </h1>
+    <md-toolbar layout="row" class="ng-hide" ng-hide="!isLoggedIn" scroll-shrink>
 
-    <div class="md-toolbar-tools" flex="33" layout-align="end">
-        <div layout="row" layout-align="end center" class="ng-hide" ng-hide="!isLoggedIn">
-            <div class="md-body-2" hide-sm>{{requestCount}} feeds</div>
-            <md-button class="md-raised" ng-click="clickRequest()">{{requestButton}}</md-button>
+        <div class="md-toolbar-tools" flex-gt-sm="33" hide-sm>
+            <div class="fb-like" data-href="https://spicydog.github.io/facebook-story-search/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
         </div>
-    </div>
 
-</md-toolbar>
+        <h1 class="md-toolbar-tools" flex  layout-align-gt-sm="center">
+            Facebook Story Search
+        </h1>
 
+        <div class="md-toolbar-tools" flex="33" layout-align="end">
+            <div layout="row" layout-align="end center" class="ng-hide" ng-hide="!isLoggedIn">
+                <div class="md-body-2" hide-sm>{{requestCount}} feeds</div>
+                <md-button class="md-raised" ng-click="clickRequest()">{{requestButton}}</md-button>
+            </div>
+        </div>
 
-<div layout="column" flex layout-align="center center" class="ng-hide" ng-hide="isLoggedIn">
-    <div class="md-display-3">Facebook Story Search</div>
-    <div class="md-headline">Search all the posts on your Facebook</div>
-    <br /><br /><br /><br />
-    <fb:login-button data-size="xlarge" data-scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
-    <br /><br /><br /><br />
-    <div class="body-1">The application supports English and Thai languages only,</div>
-    <div class="body-1">the messages of other languages may not be searchable.</div>
-    <br />
-    <div class="md-caption"><a href="privacypolicy.html" target="_blank">Privacy Policy</a></div>
-</div>
+    </md-toolbar>
 
-<div layout="column" class="ng-hide" ng-hide="!isLoggedIn">
+    <md-content layout="column" scrolled-to-bottom flex>
 
-    <div layout="row">
-        <div flex-gt-md="20" flex-gt-sm="10" ></div>
-        <div flex>
+        <div layout="column" flex layout-align="center center" class="ng-hide" ng-hide="isLoggedIn">
+            <div class="md-display-3">Facebook Story Search</div>
+            <div class="md-headline">Search all the posts on your Facebook</div>
+            <br /><br /><br /><br />
+            <fb:login-button data-size="xlarge" data-scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
+            <br /><br /><br /><br />
+            <div class="body-1">The application supports English and Thai languages only,</div>
+            <div class="body-1">the messages of other languages may not be searchable.</div>
+            <br />
+            <div class="md-caption"><a href="privacypolicy.html" target="_blank">Privacy Policy</a></div>
+        </div>
+
+        <div layout="column" class="ng-hide" ng-hide="!isLoggedIn">
 
             <div layout="row">
-                <md-input-container flex>
-                    <label>Search</label>
-                    <input ng-model="search.keyword" select-on-click ng-enter="clickSearch(search.keyword)">
-                </md-input-container>
+                <div flex-gt-md="20" flex-gt-sm="10" ></div>
+                <div flex>
 
-                <md-button class="md-icon-button md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)" aria-label="Search">
-                    <md-icon md-svg-icon="asset/img/magnifying-glass.svg"></md-icon>
-                </md-button>
-            </div>
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>Search</label>
+                            <input ng-model="search.keyword" select-on-click ng-enter="clickSearch(search.keyword)">
+                        </md-input-container>
 
-            <div layout="row" class="md-caption"  ng-if="isSearch">
-                <div>Search: {{searchResult.keyword}} ({{searchResult.number}} results)</div>
-            </div>
+                        <md-button class="md-icon-button md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)" aria-label="Search">
+                            <md-icon md-svg-icon="asset/img/magnifying-glass.svg"></md-icon>
+                        </md-button>
+                    </div>
+
+                    <div layout="row" class="md-caption"  ng-if="isSearch">
+                        <div>Search: {{searchResult.keyword}} ({{searchResult.number}} results)</div>
+                    </div>
 
 
-            <div layout="row" flex layout-align-gt-md="center">
-                <div layout="column" flex>
-                    <md-content there-is-more>
-                        <md-card ng-repeat="feed in feedResults | orderBy:order | limitTo:quantity" class="ng-hide" ng-hide="isFinishLoading">
-                            <md-card-content>
+                    <div layout="row" flex layout-align-gt-md="center">
+                        <div layout="column" flex>
+                            <md-content there-is-more>
+                                <md-card ng-repeat="feed in feedResults | orderBy:order | limitTo:quantity" class="ng-hide" ng-hide="isFinishLoading">
+                                    <md-card-content>
 
-                                <div layout="column">
+                                        <div layout="column">
 
-                                    <div layout="row">
-                                        <div class="md-padding">
-                                            <a target="_blank" href="https://facebook.com/{{feed.from.id}}">
-                                                <img src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
-                                            </a>
-                                        </div>
-                                        <div class="md-padding" layout="column" flex>
-                                            <div class="md-title">
-                                                <a target="_blank" href="https://facebook.com/{{feed.from.id}}" class="md-title">
-                                                    {{feed.from.name}}
+                                            <div layout="row">
+                                                <div class="md-padding">
+                                                    <a target="_blank" href="https://facebook.com/{{feed.from.id}}">
+                                                        <img src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
+                                                    </a>
+                                                </div>
+                                                <div class="md-padding" layout="column" flex>
+                                                    <div class="md-title">
+                                                        <a target="_blank" href="https://facebook.com/{{feed.from.id}}" class="md-title">
+                                                            {{feed.from.name}}
+                                                        </a>
+                                                    </div>
+                                                    <div class="md-caption">
+                                                        <a target="_blank" href="{{feed.actions[0].link}}" class="time" class="md-caption">
+                                                            {{feed.updated_time}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div layout="column">
+                                                <div class="md-body-1">
+                                                    {{feed.message}}
+                                                </div>
+                                            </div>
+
+
+                                            <div layout="row" ng-if="feed.picture">
+                                                <a target="_blank" href="{{feed.link}}">
+                                                    <img src="{{feed.picture}}" />
                                                 </a>
                                             </div>
-                                            <div class="md-caption">
-                                                <a target="_blank" href="{{feed.actions[0].link}}" class="time" class="md-caption">
-                                                    {{feed.updated_time}}
-                                                </a>
+
+                                            <div layout="column" ng-if="feed.link">
+                                                <div class="md-caption"><a target="_blank" href="{{feed.link}}">{{feed.caption}}</a></div>
+                                                <div class="md-caption">{{feed.description}}</div>
+                                            </div>
+
+
+                                            <div layout="row" layout-align="end" flex ng-if="isSearch">
+                                                <div class="md-caption">
+                                                    Score: {{feed.score.toFixed(4)}}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div layout="column">
-                                        <div class="md-body-1">
-                                            {{feed.message}}
-                                        </div>
-                                    </div>
 
 
-                                    <div layout="row" ng-if="feed.picture">
-                                        <a target="_blank" href="{{feed.link}}">
-                                            <img src="{{feed.picture}}" />
-                                        </a>
-                                    </div>
-
-                                    <div layout="column" ng-if="feed.link">
-                                        <div class="md-caption"><a target="_blank" href="{{feed.link}}">{{feed.caption}}</a></div>
-                                        <div class="md-caption">{{feed.description}}</div>
-                                    </div>
+                                    </md-card-content>
+                                </md-card>
 
 
-                                    <div layout="row" layout-align="end" flex ng-if="isSearch">
-                                        <div class="md-caption">
-                                            Score: {{feed.score.toFixed(4)}}
-                                        </div>
-                                    </div>
+                                <div layout="row" class="ng-hide" ng-hide="searchResult.number<quantity">
+                                    <md-button flex class="md-raised" ng-click="clickShowMore()">Show More</md-button>
                                 </div>
-
-
-                            </md-card-content>
-                        </md-card>
-
-
-                        <div layout="row" class="ng-hide" ng-hide="searchResult.number<quantity">
-                            <md-button flex class="md-raised" ng-click="clickShowMore()">Show More</md-button>
+                            </md-content>
                         </div>
-                    </md-content>
-                    </md-content>
+                    </div>
                 </div>
+                <div flex-gt-md="20" flex-gt-sm="10" ></div>
             </div>
-        </div>
-        <div flex-gt-md="20" flex-gt-sm="10" ></div>
-    </div>
 
+
+        </div>
+    </md-content>
 
 </div>
 
-    <!-- My Scripts -->
-    <script type="text/javascript" src="https://spicydog.github.io/ThaiTokenizer/js/tokenizer.js"></script>
 
-    <script src="asset/js/search_engine.js"></script>
-    <script src="asset/js/feed_retriever.js"></script>
+<!-- My Scripts -->
+<script type="text/javascript" src="https://spicydog.github.io/ThaiTokenizer/js/tokenizer.js"></script>
 
+<script src="asset/js/search_engine.js"></script>
+<script src="asset/js/feed_retriever.js"></script>
 
 </body>
 </html>
