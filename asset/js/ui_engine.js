@@ -126,7 +126,7 @@ storySearchApp.directive("scrolledToBottom", function ($window) {
     var lastScrollHeight = document.body.scrollHeight;
     return function(scope, element, attrs) {
         angular.element($window).bind("scroll", function() {
-            if(document.body.scrollHeight-document.body.scrollTop-document.documentElement.clientHeight < 50) {
+            if(document.body.scrollHeight-document.body.scrollTop-document.documentElement.clientHeight < 300) {
                 // At the end of the screen
                 if(lastScrollHeight != document.body.scrollHeight) {
                     scope.clickShowMore();
