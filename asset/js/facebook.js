@@ -6,13 +6,20 @@ function statusChangeCallback(response) {
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
+        console.log('Facebook connection status: successful');
         // Logged into your app and Facebook.
         var accessToken = response.authResponse.accessToken;
         setAccessToken(accessToken);
         storySearchApp.scope.isLoggedIn = true;
     } else if (response.status === 'not_authorized') {
+        console.log('Facebook connection status: not authorized');
         storySearchApp.scope.isLoggedIn = false;
     } else {
+        if(response.status) {
+            console.log('Facebook connection status: ' + response.status);
+        } else {
+            console.log('Facebook connection status: WTF!');
+        }
         storySearchApp.scope.isLoggedIn = false;
     }
 
