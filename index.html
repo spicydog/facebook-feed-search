@@ -32,7 +32,7 @@
 </head>
 
 
-<body>
+<body ng-clock>
 
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -111,7 +111,7 @@
                                             <div layout="row">
                                                 <div class="md-padding">
                                                     <a target="_blank" href="https://facebook.com/{{feed.from.id}}">
-                                                        <img src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
+                                                        <img ng-src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" />
                                                     </a>
                                                 </div>
                                                 <div class="md-padding" layout="column" flex>
@@ -137,7 +137,7 @@
 
                                             <div layout="row" ng-if="feed.picture">
                                                 <a target="_blank" href="{{feed.link}}">
-                                                    <img src="{{feed.picture}}" />
+                                                    <img ng-src="{{feed.picture}}" />
                                                 </a>
                                             </div>
 
