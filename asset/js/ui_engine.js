@@ -11,6 +11,9 @@ storySearchApp.controller('AppCtrl', function($scope) {
 
     storySearchApp.scope = $scope;
 
+    $scope.search = {};
+    $scope.search.mode = 'fulltext';
+
     $scope.defaultQuantity = 10;
     $scope.quantity = $scope.defaultQuantity;
 
@@ -42,12 +45,19 @@ storySearchApp.controller('AppCtrl', function($scope) {
         }
         $scope.keyword = keyword;
 
-        if(keyword.length>0) {
+        if(keyword.length > 0) {
 
             $scope.$applyAsync(function() {
-                var documents = search(keyword);
+
+                var documents = [];
+                if ($scope.search.mode == 'fulltext') {
+                    documents = searchFullText(keyword);
+                } else {
+                    documents = searchRelevant(keyword);
+                }
+
                 var feedResults = [];
-                for(i in documents) {
+                for(var i in documents) {
                     var document = documents[i];
                     var feedData = getFeedData(document.id);
                     feedData.score = document.score;

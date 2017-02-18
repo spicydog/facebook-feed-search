@@ -109,7 +109,31 @@ function getSortedIndices(array) {
     return indices;
 }
 
-function search(keyword) {
+function searchFullText(keywordString) {
+    var keywords = keywordString.split(' ');
+    var sortedDocuments = [];
+    for (var i in documentList) {
+        var docID = documentList[i]['id'];
+        var doc = getFeedData(docID);
+        var msg = doc.message;
+        if (msg && msg.length > 0) {
+            var match = false;
+            for (var j in keywords) {
+                var keyword = keywords[j];
+                if (keyword.length > 0 && msg.indexOf(keyword) != -1) {
+                    match = true;
+                    break;
+                }
+            }
+            if (match) {
+                sortedDocuments.push(documentList[i]);
+            }
+        }
+    }
+    return sortedDocuments;
+}
+
+function searchRelevant(keyword) {
     var keywords = tokenize(keyword);
     var scores = getDocumentsScores(keywords);
     var sortedIndex = getSortedIndices(scores).reverse();
@@ -117,7 +141,7 @@ function search(keyword) {
     var sortedDocuments = [];
     for(var i in sortedIndex) {
         var docID = sortedIndex[i];
-        if(scores[docID]>0) {
+        if(scores[docID] > 0) {
             documentList[docID].score = scores[docID];
             sortedDocuments.push(documentList[docID]);
         }
