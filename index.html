@@ -70,7 +70,7 @@
             <div class="md-display-3">Facebook Story Search</div>
             <div class="md-headline">Search all the posts on your Facebook</div>
             <br /><br /><br /><br />
-            <fb:login-button data-size="xlarge" data-scope="user_posts" onlogin="checkLoginState();"></fb:login-button>
+            <fb:login-button data-size="xlarge" data-scope="user_posts,read_page_mailboxes" onlogin="checkLoginState();"></fb:login-button>
             <br /><br /><br /><br />
             <div class="body-1">The application supports English and Thai languages only,</div>
             <div class="body-1">the messages of other languages may not be searchable.</div>
@@ -93,6 +93,13 @@
                         <md-button class="md-icon-button md-primary" ng-model="search.button" ng-click="clickSearch(search.keyword)" aria-label="Search">
                             <md-icon md-svg-icon="asset/img/magnifying-glass.svg"></md-icon>
                         </md-button>
+                    </div>
+
+                    <div layout="row">
+                        <md-radio-group ng-model="search.mode">
+                            <md-radio-button value="fulltext">Full-Text Search</md-radio-button>
+                            <md-radio-button value="relevant">Relevant (Experiment)</md-radio-button>
+                        </md-radio-group>
                     </div>
 
                     <div layout="row" class="md-caption"  ng-if="isSearch">
@@ -177,7 +184,7 @@
 
 
 <!-- My Scripts -->
-<script type="text/javascript" src="https://spicydog.github.io/ThaiTokenizer/js/tokenizer.js"></script>
+<script type="text/javascript" src="https://spicydog.github.io/thai-word-tokenizer/js/tokenizer.js"></script>
 
 <script src="asset/js/search_engine.js"></script>
 <script src="asset/js/feed_retriever.js"></script>
