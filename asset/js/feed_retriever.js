@@ -147,7 +147,7 @@ function getFeedData(id) {
 
 function generateFeedRequestURL(accessToken,since,until,limit) {
 
-    url = "https://graph.facebook.com/v2.2/me/feed?fields=id,from,message,created_time&access_token=" + accessToken;
+    url = "https://graph.facebook.com/v2.2/me/feed?fields=id,from,message,created_time,updated_time,link,caption,picture,description&access_token=" + accessToken;
     if(since>0) {
         url += '&since=' + since;
     }
