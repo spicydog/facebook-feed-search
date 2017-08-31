@@ -5,4 +5,4 @@ It is a web application the proof the search engine concept by indexing data fro
 
 After gathering the information, you can search the messages of your Facebook instantly.
 
-You can use the application here: https://www.spicydog.org/project/fb
+You can use the application here: https://spicydog.github.io/facebook-story-search/
